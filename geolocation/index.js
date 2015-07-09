@@ -15,7 +15,7 @@ var Geolocation = {
     locations : locations,
 
     // Calculate the distance between 2 targets.
-    distanceBetween : function(lat1, lon1, lat2, lon2, radius, options){
+    distanceBetween : function(lat1, lon1, lat2, lon2, radius){
         // Convert deltas to radians.
         var radCon = Math.PI/180;
         var p1 = lat1 * radCon;
@@ -31,8 +31,8 @@ var Geolocation = {
         var distance = radius * conversion;
         return distance;
     },
+    
 
-    // Update cache.
     findNearbyLocations : function(options, position, callback) {
         console.info("Finding nearest locations around you ... √");
         var radius = 3959; // Miles
@@ -55,7 +55,7 @@ var Geolocation = {
             if (!obj) return;
             var dx = Math.abs(obj.longitude-longitude)*GOLD, // Convert difference of longitude to ratio.
                 dy = Math.abs(obj.latitude-latitude)*GOLD, // Convert difference of longitude to ratio.
-                d = _this.distanceBetween(latitude, longitude, obj.latitude, obj.longitude, radius, options); // Calculate the distance away.
+                d = _this.distanceBetween(latitude, longitude, obj.latitude, obj.longitude, radius); // Calculate the distance away.
 
             // If the location is less than or equal to the max distance and the calculated distance is less than or equal to the max distance...
             if (dx <= MAXR && dy <= MAXR && d <= MAXR) {

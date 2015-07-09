@@ -23,10 +23,10 @@ app.get('/geo', function (req, res) {
 		conversionToMiles: 69,
 		maxRadius: 10
 	};
-    var d1 = new Date();
+
+    console.time("findNearbyLocations");
 	geolocation.findNearbyLocations(options, req.query, function(nearby) {
-        var d2 = new Date();
-        console.log(d2-d1);
+        console.timeEnd("findNearbyLocations");
         console.log(nearby);
         res.send(nearby);
 	});
