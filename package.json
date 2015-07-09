@@ -1,0 +1,14 @@
+{
+  "name": "geoservice",
+  "version": "1.0.0",
+  "description": "Geolocation service",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Sam Wenke",
+  "dependencies": {
+    "express": "^4.13.1",
+    "lodash": "^3.10.0"
+  }
+}
