@@ -18,10 +18,7 @@ app.all('/geo', function(req, res, next) {
 });
 
 app.get('/geo', function (req, res) {
-    console.time("findNearbyLocations");
 	geolocation.findNearbyLocations(req.query, function(nearby) {
-        console.timeEnd("findNearbyLocations");
-        console.log(nearby);
         res.send(nearby);
 	});
 });

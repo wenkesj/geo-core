@@ -55,7 +55,7 @@ var Geolocation = {
             if (offset >= 1 || offset <= -1) {
                 return this.nearbyLocations.push({
                     name: "Error",
-                    type: "The closest city with > 5000 population is further than ~69 miles"
+                    type: "The closest city with > 5000 population is further than ~138 miles"
                 });
             }
             latKey = parseFloat(latChop + offset).toFixed(2);
