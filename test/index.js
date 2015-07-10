@@ -8,7 +8,6 @@ var durham = {
     lat: '36.0012103',
     lon: '-78.8824805'
 };
-// '35.99,-78.90': [ { name: 'Durham', latitude: '35.99403', longitude: '-78.89862' } ],
 var pacificOcean = {
     lat: '-13.7036473',
     lon: '-148.9712961'

@@ -35,7 +35,6 @@ var Geolocation = {
         var latitude = position.lat;
         var longitude = position.lon;
         var offset = 0.01;
-        // 2n combinations
         this.performGeoSearch(2,offset,latitude,longitude);
         console.log("Found all locations close to you ... √");
         callback(this.nearbyLocations);
@@ -53,9 +52,7 @@ var Geolocation = {
             for (var j = 0; j < 2*m; j++) {
                 var key = lats[i]+','+lons[j];
                 var locations = this.locations[key];
-                if (!locations) {
-                    continue;
-                }
+                if (!locations) continue;
                 for (var k = 0; k < locations.length; k++) {
                     var location = locations[k];
                     this.performCalculation(location, latitude, longitude);
