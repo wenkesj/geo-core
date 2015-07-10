@@ -35,7 +35,7 @@ var Geolocation = {
         var latitude = position.lat;
         var longitude = position.lon;
         var offset = 0.01;
-        this.performGeoSearch(2,offset,latitude,longitude);
+        this.performGeoSearch(5,offset,latitude,longitude);
         console.log("Found all locations close to you ... √");
         callback(this.nearbyLocations);
         this.nearbyLocations = [];
@@ -46,10 +46,10 @@ var Geolocation = {
             lats.push((parseFloat(latitude)+parseFloat(g*offset)).toFixed(2));
             lons.push((parseFloat(longitude)+parseFloat(g*offset)).toFixed(2));
         }
-        for (var i = 0; i < 2*m; i++) {
+        for (var i = 0; i < 2*m+1; i++) {
             var key1 = lats[i];
             var key2 = lons[i];
-            for (var j = 0; j < 2*m; j++) {
+            for (var j = 0; j < 2*m+1; j++) {
                 var key = lats[i]+','+lons[j];
                 var locations = this.locations[key];
                 if (!locations) continue;
@@ -59,12 +59,16 @@ var Geolocation = {
                 }
             }
         }
-        if (!this.nearbyLocations[0]) {
-            if (m > 16) return this.nearbyLocations.push({name: "Error",type:"No locations found, 16X16 tries."});
+        if (!this.nearbyLocations[2]) {
+            if (m > 16) return this.nearbyLocations.push({name: "Error",type:"No locations found, "+m*m+" attempts."});
             return this.performGeoSearch(2*m,offset,latitude,longitude);
         }
     },
     performCalculation : function(location,latitude,longitude) {
+        if (this.nearbyLocations[0]) {
+            var id = this.nearbyLocations.indexOf(location);
+            if (id > -1) return this.nearbyLocations.splice(id,1);
+        }
         var d = this.distanceBetween(latitude, longitude, location.latitude, location.longitude); // Calculate the distance away.
         location.distance = d;
         location.units = 'miles';

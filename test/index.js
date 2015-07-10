@@ -12,6 +12,10 @@ var pacificOcean = {
     lat: '-13.7036473',
     lon: '-148.9712961'
 };
+var myLocation = {
+    lat: '35.873638799999995',
+    lon: '-78.84235389999999'
+};
 
 console.time("apex");
 geo.findNearbyLocations( apex, function(nearby) {
@@ -28,5 +32,11 @@ geo.findNearbyLocations( durham, function(nearby) {
 console.time("pacificOcean");
 geo.findNearbyLocations( pacificOcean, function(nearby) {
 	console.timeEnd("pacificOcean");
+	console.log(nearby);
+});
+
+console.time("myLocation");
+geo.findNearbyLocations( myLocation, function(nearby) {
+	console.timeEnd("myLocation");
 	console.log(nearby);
 });
