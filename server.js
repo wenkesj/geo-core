@@ -18,14 +18,8 @@ app.all('/geo', function(req, res, next) {
 });
 
 app.get('/geo', function (req, res) {
-	var options = {
-		units: 'miles',
-		conversionToMiles: 69,
-		maxRadius: 10
-	};
-
     console.time("findNearbyLocations");
-	geolocation.findNearbyLocations(options, req.query, function(nearby) {
+	geolocation.findNearbyLocations(req.query, function(nearby) {
         console.timeEnd("findNearbyLocations");
         console.log(nearby);
         res.send(nearby);

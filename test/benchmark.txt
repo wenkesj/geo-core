@@ -1,2 +1,5 @@
 "findAllNearbyLocations"
 Average all distance search 90ms.
+
+"findAllNearbyLocations"
+Average all with average conversion search 30ms.
