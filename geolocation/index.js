@@ -5,21 +5,21 @@ var locations = locationData.split("\n").map(function(locationInfo) {
     var locationCols = locationInfo.split("\t");
     return {
         name: locationCols[1],
-        latitude: locationCols[4],
-        longitude: locationCols[5]
+        latitude: parseFloat(locationCols[4]).toFixed(5),
+        longitude: parseFloat(locationCols[5]).toFixed(5)
     };
 });
 locations.sort(function(location1, location2) {
     return parseFloat(location1.latitude) - parseFloat(location2.latitude);
 });
+
 var locationMap = {};
 for (var i = 0; i < locations.length; i++) {
     if (!locations[i]) continue;
     var latKey = locations[i].latitude;
     var lonKey = locations[i].longitude;
-    var fixed = Math.pow(10, 2);
-    latKey = Math.floor(latKey * fixed) / fixed;
-    lonKey = Math.floor(lonKey * fixed) / fixed;
+    latKey = parseFloat(latKey).toFixed(2);
+    lonKey = parseFloat(lonKey).toFixed(2);
     var key = latKey+","+lonKey;
     if (locationMap[key]) {
         locationMap[key].push(locations[i]);
@@ -29,8 +29,57 @@ for (var i = 0; i < locations.length; i++) {
 }
 var Geolocation = {
     locations : locationMap,
+    nearbyLocations : [],
     radiansConversion : Math.PI/180,
-    distanceBetween : function(lat1, lon1, lat2, lon2, radius){
+    findNearbyLocations : function(position, callback) {
+        console.info("Finding nearest locations around you ... √");
+        var latitude = position.lat;
+        var longitude = position.lon;
+        var p = -4, q = 5;
+        var r = null, s = null;
+        this.performGeoSearch(p,q,r,s,latitude,longitude);
+        console.log("Found all locations close to you ... √");
+        callback(this.nearbyLocations);
+        this.nearbyLocations = [];
+    },
+    performGeoSearch : function(p,q,r,s,latitude,longitude) {
+        var max = Math.abs(p)+q;
+        var h = 0;
+        var key, latKey, lonKey;
+        var latChop = parseFloat(latitude);
+        var lonChop = parseFloat(longitude);
+        for (var i = p; i < q; i++, h++) {
+            // Check if the iterations have already been through.
+            offset = parseFloat(i / 100);
+            if (offset >= 1 || offset <= -1) {
+                return console.error("The closest city with > 5000 population is further than ~69 miles");
+            }
+            latKey = parseFloat(latChop + offset).toFixed(2);
+            lonKey = parseFloat(lonChop + offset).toFixed(2);
+            key = latKey+","+lonKey;
+            if (!this.locations[key]) {
+                if (!this.nearbyLocations[0] && h === max-1) {
+                    r = p-4;
+                    s = q+4;
+                    return this.performGeoSearch(r,s,p,q,latitude,longitude);
+                }
+                continue;
+            }
+            this.performCalculation(key, latitude, longitude);
+        }
+    },
+    performCalculation : function(key,latitude,longitude) {
+        var location, dx, dxf, dy, d;
+        for (var j = 0; j < this.locations[key].length; j++) {
+            location = this.locations[key][j];
+            d = this.distanceBetween(latitude, longitude, location.latitude, location.longitude); // Calculate the distance away.
+            location.distance = d;
+            location.units = 'miles';
+            this.nearbyLocations.push(location);
+        }
+    },
+    distanceBetween : function(lat1, lon1, lat2, lon2){
+        var radius = 3959;
         var p1 = this.radiansConversion*lat1;
         var p2 = this.radiansConversion*lat2;
         var dp = this.radiansConversion*(lat2-lat1);
@@ -39,35 +88,6 @@ var Geolocation = {
         var conversion = 2 * Math.atan2(Math.sqrt(alpha), Math.sqrt(1-alpha));
         var distance = radius * conversion;
         return distance;
-    },
-    findNearbyLocations : function(position, callback) {
-        console.info("Finding nearest locations around you ... √");
-        var radius = 3959;
-        var latitude = position.lat;
-        var longitude = position.lon;
-        var fixed = Math.pow(10, 2);
-        var key, latKey, lonKey;
-        var nearbyLocations = [], location;
-        var dx, dxf, dy, d;
-        var _this = this;
-        for (var i = -4; i < 5; i++) {
-            offset = i / fixed;
-            latKey = Math.round(((Math.floor(latitude * fixed) / fixed) + offset)*fixed)/fixed;
-            lonKey = Math.round(((Math.floor(longitude * fixed) / fixed) + offset)*fixed)/fixed;
-            key = latKey+","+lonKey;
-            if (!this.locations[key]) {
-                continue;
-            }
-            for (var j = 0; j < this.locations[key].length; j++) {
-                location = this.locations[key][j];
-                d = _this.distanceBetween(latitude, longitude, location.latitude, location.longitude, radius); // Calculate the distance away.
-                location.distance = d;
-                location.units = 'miles';
-                nearbyLocations.push(location);
-            }
-        }
-        console.log("Found all locations close to you ... √");
-        callback(nearbyLocations);
     }
 };
 
