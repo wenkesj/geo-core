@@ -48,11 +48,15 @@ var Geolocation = {
         var key, latKey, lonKey;
         var latChop = parseFloat(latitude);
         var lonChop = parseFloat(longitude);
+        console.log("Checking for locations near you ... √");
         for (var i = p; i < q; i++, h++) {
             // Check if the iterations have already been through.
             offset = parseFloat(i / 100);
             if (offset >= 1 || offset <= -1) {
-                return console.error("The closest city with > 5000 population is further than ~69 miles");
+                return this.nearbyLocations.push({
+                    name: "Error",
+                    type: "The closest city with > 5000 population is further than ~69 miles"
+                });
             }
             latKey = parseFloat(latChop + offset).toFixed(2);
             lonKey = parseFloat(lonChop + offset).toFixed(2);

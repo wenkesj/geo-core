@@ -16,8 +16,8 @@ geo.findNearbyLocations( location_1, function(nearby) {
 	console.log(nearby);
 });
 
-// console.time("location_1");
-// geo.findNearbyLocations( location_1, function(nearby) {
-// 	console.timeEnd("location_1");
-// 	console.log(nearby);
-// });
+console.time("location_2");
+geo.findNearbyLocations( location_2, function(nearby) {
+	console.timeEnd("location_2");
+	console.log(nearby);
+});
