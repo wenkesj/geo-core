@@ -31,12 +31,10 @@ var Geolocation = {
     nearbyLocations : [],
     radiansConversion : Math.PI/180,
     findNearbyLocations : function(position, callback) {
-        console.info("Finding nearest locations around you ... √");
         var latitude = position.lat;
         var longitude = position.lon;
         var offset = 0.01;
         this.performGeoSearch(5,offset,latitude,longitude);
-        console.log("Found all locations close to you ... √");
         callback(this.nearbyLocations);
         this.nearbyLocations = [];
     },
