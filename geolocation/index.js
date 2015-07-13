@@ -1,4 +1,18 @@
 var fs = require('fs');
+/**
+    Geolocation parses a .txt file into a JSON object sorted
+    by latidude value numerically and with (latitude,longitude)
+    fixed decimal indexing. The locations are stored in an
+    array.
+ *
+ *  @const radius is the radius of the earth in @const units.
+ *  @const radiansConversion converts degrees to radians.
+ *  @const offset is the latidude and longitude offset for lookup
+ *  @const permutations are the number of initial iterations about
+    the center point.
+ *
+ */
+var radius = 3959, radiansConversion = Math.PI/180, offset = 0.01, permutations = 5, units = 'miles';
 var locationData = fs.readFileSync('./geolocation/cities5000.txt', 'utf8');
 var locations = locationData.split("\n").map(function(locationInfo) {
     if (!locationInfo) return;
@@ -14,27 +28,22 @@ locations.sort(function(location1, location2) {
 });
 var locationMap = {};
 for (var i = 0; i < locations.length; i++) {
-    if (!locations[i]) continue;
-    var latKey = locations[i].latitude;
-    var lonKey = locations[i].longitude;
-    latKey = parseFloat(latKey).toFixed(2);
-    lonKey = parseFloat(lonKey).toFixed(2);
+    var location = locations[i];
+    if (!location) continue;
+    latKey = parseFloat(location.latitude).toFixed(2);
+    lonKey = parseFloat(location.longitude).toFixed(2);
     var key = latKey+","+lonKey;
     if (locationMap[key]) {
-        locationMap[key].push(locations[i]);
+        locationMap[key].push(location);
         continue;
     }
-    locationMap[key] = [locations[i]];
+    locationMap[key] = [location];
 }
 var Geolocation = {
     locations : locationMap,
     nearbyLocations : [],
-    radiansConversion : Math.PI/180,
     findNearbyLocations : function(position, callback) {
-        var latitude = position.lat;
-        var longitude = position.lon;
-        var offset = 0.01;
-        this.performGeoSearch(5,offset,latitude,longitude);
+        this.performGeoSearch(permutations,offset,position.lat,position.lon);
         callback(this.nearbyLocations);
         this.nearbyLocations = [];
     },
@@ -45,15 +54,11 @@ var Geolocation = {
             lons.push((parseFloat(longitude)+parseFloat(g*offset)).toFixed(2));
         }
         for (var i = 0; i < 2*m+1; i++) {
-            var key1 = lats[i];
-            var key2 = lons[i];
             for (var j = 0; j < 2*m+1; j++) {
-                var key = lats[i]+','+lons[j];
-                var locations = this.locations[key];
+                var locations = this.locations[(lats[i]+','+lons[j])];
                 if (!locations) continue;
                 for (var k = 0; k < locations.length; k++) {
-                    var location = locations[k];
-                    this.performCalculation(location, latitude, longitude);
+                    this.performCalculation(locations[k], latitude, longitude);
                 }
             }
         }
@@ -67,21 +72,16 @@ var Geolocation = {
             var id = this.nearbyLocations.indexOf(location);
             if (id > -1) return this.nearbyLocations.splice(id,1);
         }
-        var d = this.distanceBetween(latitude, longitude, location.latitude, location.longitude); // Calculate the distance away.
-        location.distance = d;
-        location.units = 'miles';
+        location.distance = this.distanceBetween(latitude, longitude, location.latitude, location.longitude);
+        location.units = units;
         this.nearbyLocations.push(location);
     },
     distanceBetween : function(lat1, lon1, lat2, lon2){
-        var radius = 3959;
-        var p1 = this.radiansConversion*lat1;
-        var p2 = this.radiansConversion*lat2;
-        var dp = this.radiansConversion*(lat2-lat1);
-        var dg = this.radiansConversion*(lon2-lon1);
-        var alpha = Math.sin(dp/2) * Math.sin(dp/2) + Math.cos(p1) * Math.cos(p2) * Math.sin(dg/2) * Math.sin(dg/2);
-        var conversion = 2 * Math.atan2(Math.sqrt(alpha), Math.sqrt(1-alpha));
-        var distance = radius * conversion;
-        return distance;
+        var p1 = radiansConversion*lat1, p2 = radiansConversion*lat2,
+            dp = radiansConversion*(lat2-lat1), dg = radiansConversion*(lon2-lon1),
+            alpha = Math.sin(dp/2) * Math.sin(dp/2) + Math.cos(p1) * Math.cos(p2) * Math.sin(dg/2) * Math.sin(dg/2),
+            conversion = 2 * Math.atan2(Math.sqrt(alpha), Math.sqrt(1-alpha));
+        return radius * conversion;
     }
 };
 module.exports = Geolocation;
