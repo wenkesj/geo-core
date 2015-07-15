@@ -1,4 +1,6 @@
 var fs = require('fs');
+var path = require('path');
+var citiesFilePath = path.normalize(path.join(__dirname, 'cities5000.txt'));
 /**
     Geolocation parses a .txt file into a JSON object sorted
     by latidude value numerically and with (latitude,longitude)
@@ -13,12 +15,14 @@ var fs = require('fs');
  *
  */
 var radius = 3959, radiansConversion = Math.PI/180, offset = 0.01, permutations = 5, units = 'miles';
-var locationData = fs.readFileSync('./geolocation/cities5000.txt', 'utf8');
+var locationData = fs.readFileSync( citiesFilePath, 'utf8');
 var locations = locationData.split("\n").map(function(locationInfo) {
     if (!locationInfo) return;
     var locationCols = locationInfo.split("\t");
     return {
-        name: locationCols[1],
+        city: locationCols[1],
+        division: locationCols[10],
+        country: locationCols[8],
         latitude: parseFloat(locationCols[4]).toFixed(5),
         longitude: parseFloat(locationCols[5]).toFixed(5)
     };
