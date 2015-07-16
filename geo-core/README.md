@@ -26,6 +26,7 @@ Included is the *cities5000.txt* from [geonames downloads](http://download.geona
                 country: "countryName",
                 latitude: "latitude",
                 longitude: "longitude",
+                population: "2s comp of bigint (Readable number)"
                 distance: "distanceFromCoord"
                 units: "unitOfMeasurement" -- Defaults to miles
             },
@@ -34,4 +35,4 @@ Included is the *cities5000.txt* from [geonames downloads](http://download.geona
          */
     });
 ```
-_geocore_ has no dependencies other than the [geonames](http://geonames.org/) file.
+_geocore_ has no dependencies other than included the [geonames](http://geonames.org/) file.

@@ -1,6 +1,6 @@
 {
   "name": "geo-core",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Tool for parsing a geonames city file into a JSON object for fast lookup of latitude and longitudes.",
   "main": "index.js",
   "author": "Sam Wenke <samwenke@gmail.com>",

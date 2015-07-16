@@ -1,4 +1,4 @@
-var geo = require('../geolocation');
+var geo = require('../geo-core');
 
 var apex = {
     lat: '35.73265',
