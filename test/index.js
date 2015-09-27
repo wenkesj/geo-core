@@ -13,20 +13,20 @@ var pacificOcean = {
     lon: '-148.9712961'
 };
 
-console.time("apex");
-geo.findNearbyLocations( apex, function(nearby) {
-	console.timeEnd("apex");
+console.time('apex');
+geo.findNearbyLocations(apex).then(function(nearby) {
+	console.timeEnd('apex');
 	console.log(nearby);
 });
 
-console.time("durham");
-geo.findNearbyLocations( durham, function(nearby) {
-	console.timeEnd("durham");
+console.time('durham');
+geo.findNearbyLocations(durham).then(function(nearby) {
+	console.timeEnd('durham');
 	console.log(nearby);
 });
 
-console.time("pacificOcean");
-geo.findNearbyLocations( pacificOcean, function(nearby) {
-	console.timeEnd("pacificOcean");
+console.time('pacificOcean');
+geo.findNearbyLocations(pacificOcean).then(function(nearby) {
+	console.timeEnd('pacificOcean');
 	console.log(nearby);
 });

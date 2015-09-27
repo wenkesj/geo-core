@@ -3,26 +3,25 @@ var path = require('path');
 var citiesFilePath = path.normalize(path.join(__dirname, 'cities5000.txt'));
 
 /**
-    Geolocation parses a .txt file into a JSON object sorted
-    by latidude value numerically and with (latitude,longitude)
-    fixed decimal indexing. The locations are then searched by
-    using a closest distance calculation based on the earth as
-    a sphere. The locations are then stored in an array and sorted
-    by population.
- *
- *  @const radius is the radius of the earth in @const units.
- *  @const radiansConversion converts degrees to radians.
- *  @const offset is the latidude and longitude offset for lookup
- *  @const permutations are the number of initial iterations about
- *  the center point.
+ * Geolocation parses a .txt file into a JSON object sorted
+ * by latidude value numerically and with (latitude,longitude)
+ * fixed decimal indexing. The locations are then searched by
+ * using a closest distance calculation based on the earth as
+ * a sphere. The locations are then stored in an array and sorted
+ * by population.
+ * @const radius is the radius of the earth in @const units.
+ * @const radiansConversion converts degrees to radians.
+ * @const offset is the latidude and longitude offset for lookup
+ * @const permutations are the number of initial iterations about
+ * the center point.
  */
 
-var radius = 3959,
-    radiansConversion = Math.PI/180,
-    offset = 0.01,
-    permutations = 5,
-    units = 'miles',
-    minimumLocations = 3;
+var radius = 3959;
+var radiansConversion = Math.PI/180;
+var offset = 0.01;
+var permutations = 5;
+var units = 'miles';
+var minimumLocations = 3;
 
 /**
     Read and map the locations into an object.
@@ -72,30 +71,37 @@ for (var i = 0; i < locations.length; i++) {
 
     locationMap[key] = [location];
 }
-var Geolocation = {
-    allLocations : locationMap,
-    nearbyLocations : [],
+
+var Geolocation = function() {
+    this.allLocations = locationMap;
+    this.nearbyLocations = [];
+};
+Geolocation.prototype = {
     /**
-        This is where the functions are all bundled into in order to find the nearbyLocations.
+     * Finds the nearby locations from a given position object.
      */
     findNearbyLocations : function(position, callback) {
-        this.searchByLatidudeAndLongitude(permutations, offset, position.lat, position.lon);
-        this.sortNearbyLocationsByPopulation();
-        callback(this.nearbyLocations);
-        this.nearbyLocations = [];
+        var self = this;
+        return new Promise(function(resolve, reject) {
+            self.searchByLatidudeAndLongitude(permutations, offset, position.lat, position.lon);
+            self.sortNearbyLocationsByPopulation();
+            var temp = self.nearbyLocations;
+            self.nearbyLocations = [];
+            resolve(temp);
+        });
     },
     /**
-        For fast lookup we search the hashmap by key -> myLatitude,myLongitude truncated to the hundreth decimal place
+     * For fast lookup we search the hashmap by key -> myLatitude, myLongitude truncated to the hundreth decimal place
      */
-    searchByLatidudeAndLongitude : function(m,offset,latitude,longitude) {
+    searchByLatidudeAndLongitude : function(m, offset, latitude, longitude) {
         var lats = [], lons = [];
         for (var g = -m; g < m + 1; g++) {
             lats.push((parseFloat(latitude)+parseFloat(g*offset)).toFixed(2));
             lons.push((parseFloat(longitude)+parseFloat(g*offset)).toFixed(2));
         }
         /**
-            Take an extended number of permutations based on the initial 5.
-            For example, this will rotate and search 5 combinations about the center ->
+         * Take an extended number of permutations based on the initial 5.
+         * For example, this will rotate and search 5 combinations about the center ->
                 -> ...
                 -> myLatitude, myLongitude-1,
                 -> myLatitude,myLongitude
@@ -115,9 +121,7 @@ var Geolocation = {
                 }
             }
         }
-        /**
-            In order to ensure accuracy, we want to set a minimum to the amount of locations returned.
-         */
+        /* In order to ensure accuracy, we want to set a minimum to the amount of locations returned. */
         if (!this.nearbyLocations[minimumLocations-1]) {
             if (m > 16) {
                 return this.nearbyLocations.push({
@@ -146,7 +150,7 @@ var Geolocation = {
     /**
         This calculates the distance between 2 points on a spherical plane and converts it to miles.
      */
-    distanceCalculation : function(lat1, lon1, lat2, lon2){
+    distanceCalculation : function(lat1, lon1, lat2, lon2) {
         var p1 = radiansConversion*lat1, p2 = radiansConversion*lat2,
             dp = radiansConversion*(lat2-lat1), dg = radiansConversion*(lon2-lon1),
             alpha = Math.sin(dp/2) * Math.sin(dp/2) + Math.cos(p1) * Math.cos(p2) * Math.sin(dg/2) * Math.sin(dg/2),
@@ -166,4 +170,4 @@ var Geolocation = {
         });
     }
 };
-module.exports = Geolocation;
+module.exports = new Geolocation();
