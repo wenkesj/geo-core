@@ -32,7 +32,7 @@ var GeoManager = new Geolocation({
 ```
 
 | Property | Type | Description | Default |
-|-|-|-|-|
+| -------- | ---- | ----------- | ------- |
 | radiansConversion | Float | List of messages to display | &pi; / 180 |
 | radius | Integer | Radius of the spherical object, defaults to **Earth **. | 3959 |
 | units | String | Unit of measurement corresponding to the **radius **| 'miles' |
@@ -58,14 +58,14 @@ GeoManager.findNearbyLocations({
 **Origin Location Object**
 
 | Property | Type | Description |
-| - | - | - |
+| -------- | ---- | ----------- |
 | lon | String (Float) | **Longitude** coordinate associated with the origin position. |
 | lat | String (Float) | **Latitude** coordinate associated with the origin position. |
 
 **Geolocation Object**
 
 | Property | Type | Description |
-| - | - | - |
+| -------- | ---- | ----------- |
 | city | String (Float) | **City** associated with the location. |
 | division | String (Float) | **Division** / **Province** / **State** associated with the location. |
 | country | String (Float) | **Country** associated with the location. |
