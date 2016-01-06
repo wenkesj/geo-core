@@ -66,14 +66,14 @@ GeoManager.findNearbyLocations({
 
 | Property | Type | Description |
 | -------- | ---- | ----------- |
-| city | String (Float) | **City** associated with the location. |
-| division | String (Float) | **Division** / **Province** / **State** associated with the location. |
-| country | String (Float) | **Country** associated with the location. |
-| population | String (Float) | Total **population** of the location. |
-| longitude | String (Float) | **Longitude** coordinate associated with the location. |
-| latitude | String (Float) | **Latitude** coordinate associated with the location. |
-| distance | String (Float) | **Distance** away from the origin to the location. |
-| units | String (Float) | Unit of measure associated with the **distance** |
+| city | String | **City** associated with the location. |
+| division | String | **Division** / **Province** / **State** associated with the location. |
+| country | String | **Country** associated with the location. |
+| population | Integer | Total **population** of the location. |
+| longitude | Float | **Longitude** coordinate associated with the location. |
+| latitude | Float | **Latitude** coordinate associated with the location. |
+| distance | Float | **Distance** away from the origin to the location. |
+| units | String | Unit of measure associated with the **distance** |
 
 **geocore** has no dependencies other than the [cities5000.txt](http://download.geonames.org/export/dump/).
 
