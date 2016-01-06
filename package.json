@@ -1,14 +1,19 @@
 {
-  "name": "geoservice",
-  "version": "1.0.0",
-  "description": "Geolocation service",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
+  "name": "geo-core",
+  "version": "1.1.1",
+  "description": "Toolkit that includes fast look up of locations by latitude and longitude pairs.",
+  "main": "index.js",
+  "author": "Sam Wenke <samwenke@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/wenkesj/geo-core"
   },
-  "author": "Sam Wenke",
-  "dependencies": {
-    "express": "^4.13.1",
-    "geo-core": "^1.0.9"
+  "scripts": {
+    "test": "node_modules/.bin/mocha --ui bdd --reporter spec ./test"
+  },
+  "devDependencies": {
+    "chai": "^2.1.0",
+    "mocha": "^2.1.0"
   }
 }

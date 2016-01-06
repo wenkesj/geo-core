@@ -1,51 +1,83 @@
-__geo-core__
+# geo-core #
 
-`npm install geo-core --save`
+Toolkit that includes fast look up of locations by latitude and longitude pairs.
 
-A package to parse a [geonames](http://geonames.org/) cities file into JSON.
-Included is the *cities5000.txt* from [geonames downloads](http://download.geonames.org/export/dump/)
-```javascript
-    /**
-        Include the geocore object.
-     */
-    var geocore = require("geo-core")
-    /**
-        @param lat is the latidude coordinate
-        @param lon is the longitude coordinate
-     */
-    var Apex_NC = {
-        lat: '35.73265',
-        lon: '-78.85029'
-    };
-    geocore.findNearbyLocations( Apex_NC, function(nearby) {
-        /**
-            @return nearby will be an array of locations nearby!
-            [{
-                city: "cityName",
-                division: "provinceName/stateName/countryName",
-                country: "countryName",
-                latitude: "latitude",
-                longitude: "longitude",
-                population: "2s comp of bigint (Readable number)"
-                distance: "distanceFromCoord"
-                units: "unitOfMeasurement" -- Defaults to miles
-            },
-                ...
-            ]
-         */
-    });
-```
-_geocore_ has no dependencies other than included the [geonames](http://geonames.org/) file.
-
-_Example and source code._
-Run the test server
-```bash
-npm install
-node ./test
+```sh
+npm install geo-core --save
 ```
 
-Run the dev server
-```bash
-npm install
-node server.js
+### Requiring ###
+
+```js
+var Geolocation = require('geo-core')
 ```
+### Constructing ###
+
+Create an instance of the Geolocation class. When constructing, the manager will perform a preprocess of the ** cities5000.txt ** file. This basically contains all cities with a population of 5000 or above.
+
+```js
+var GeoManager = new Geolocation();
+```
+#### Options ####
+
+GeoLocation also takes options to override defaults for any reason.
+
+```js
+var GeoManager = new Geolocation({
+  radiansConversion: Math.PI / 2,
+  radius: 3959,
+  units: 'miles',
+  minimumLocations: 3
+});
+```
+
+| Property | Type | Description | Default |
+|-|-|-|-|
+| radiansConversion | Float | List of messages to display | &pi; / 180 |
+| radius | Integer | Radius of the spherical object, defaults to ** Earth **. | 3959 |
+| units | String | Unit of measurement corresponding to the ** radius ** | 'miles' |
+| minimumLocations | Integer | Minimum number of nearby locations returned. | 3 |
+
+### API ###
+A ** GeoManager ** instance exposes the following functions:
+
+`findNearbyLocations(Object, Function)`
+
+Returns an array of ** Geolocation Objects ** closest to the supplied ** Origin Location Object **
+
+```js
+GeoManager.findNearbyLocations({
+  lat: '35.73265',
+  lon: '-78.85029'
+}, function(locations) {
+  // ... Array of geolocation objects.
+});
+```
+
+#### Geolocation Friendly Objects ####
+** Origin Location Object **
+
+| Property | Type | Description |
+|-|-|-|
+| lon | String (Float) | ** Longitude ** coordinate associated with the origin position. |
+| lat | String (Float) | ** Latitude ** coordinate associated with the origin position. |
+
+** Geolocation Object **
+
+| Property | Type | Description |
+|-|-|-|
+| city | String (Float) | ** City ** associated with the location. |
+| division | String (Float) | ** Division ** / ** Province ** / ** State ** associated with the location. |
+| country | String (Float) | ** Country ** associated with the location. |
+| population | String (Float) | Total ** population ** of the location. |
+| longitude | String (Float) | ** Longitude ** coordinate associated with the location. |
+| latitude | String (Float) | ** Latitude ** coordinate associated with the location. |
+| distance | String (Float) | ** Distance ** away from the origin to the location. |
+| units | String (Float) | Unit of measure associated with the ** distance ** |
+
+** geocore ** has no dependencies other than the [cities5000.txt](http://download.geonames.org/export/dump/).
+
+#### Special Thanks ####
++ Austin Kelleher
++ Phil Gates-Idem
++ Mark Smith-Guerrero

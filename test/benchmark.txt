@@ -1,8 +1,0 @@
-"findAllNearbyLocations"
-7/9/2015 Average all distance search 90ms.
-
-"findAllNearbyLocations"
-7/9/2015 Average all with average conversion search 30ms.
-
-"findAllNearbyLocations"
-7/10/2015 Average all with average conversion search 0ms-3ms.
