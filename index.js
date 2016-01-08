@@ -1,13 +1,10 @@
 'use strict';
-var fs = require('fs');
-var path = require('path');
-
 /* Geolocation parses a .txt file into a JSON object sorted
- * by latidude value numerically and with (latitude,longitude)
- * fixed decimal indexing. The locations are then searched by
- * using a closest distance calculation based on the earth as
- * a sphere. The locations are then stored in an array and sorted
- * by population. */
+* by latidude value numerically and with (latitude,longitude)
+* fixed decimal indexing. The locations are then searched by
+* using a closest distance calculation based on the earth as
+* a sphere. The locations are then stored in an array and sorted
+* by population. */
 
 function Geolocation(options) {
   options = options ? options : {};
@@ -18,7 +15,7 @@ function Geolocation(options) {
   this.offset = 0.01;
   this.radiansConversion = Math.PI / 180;
   this.nearbyLocations = [];
-  this.allLocations = preprocess();
+  this.allLocations = require('./cities5000.json');
 }
 
 Geolocation.prototype = {
@@ -37,13 +34,13 @@ Geolocation.prototype = {
       lons.push((parseFloat(longitude) + parseFloat(g * offset)).toFixed(2));
     }
     /**
-      Take an extended number of permutations based on the initial 5.
-      For example, this will rotate and search 5 combinations about the center ->
-      -> ...
-      -> myLatitude, myLongitude - 1,
-      -> myLatitude, myLongitude
-      -> myLatitude, myLongitude + 1
-      -> ...
+    Take an extended number of permutations based on the initial 5.
+    For example, this will rotate and search 5 combinations about the center ->
+    -> ...
+    -> myLatitude, myLongitude - 1,
+    -> myLatitude, myLongitude
+    -> myLatitude, myLongitude + 1
+    -> ...
     */
     for (var i = 0; i < 2 * m + 1; i++) {
       for (var j = 0; j < 2 * m + 1; j++) {
@@ -101,6 +98,9 @@ Geolocation.prototype = {
 };
 
 function preprocess() {
+  var fs = require('fs');
+  var path = require('path');
+
   /* Read and map the locations into an object. */
   var locationData = fs.readFileSync(path.normalize(path.join(__dirname, 'cities5000.txt')), 'utf8');
   var locations = locationData.split('\n').map(function(locationInfo) {

@@ -13,7 +13,7 @@ var Geolocation = require('geo-core')
 ```
 ### Constructing ###
 
-Create an instance of the Geolocation class. When constructing, the manager will perform a preprocess of the **cities5000.txt** file. This basically contains all cities with a population of 5000 or above.
+Create an instance of the Geolocation class. When constructing, will require a JSON file that contains all cities with a population of 5000 or above.
 
 ```js
 var GeoManager = new Geolocation();
@@ -34,8 +34,8 @@ var GeoManager = new Geolocation({
 | Property | Type | Description | Default |
 | -------- | ---- | ----------- | ------- |
 | radiansConversion | Float | List of messages to display | &pi; / 180 |
-| radius | Integer | Radius of the spherical object, defaults to **Earth **. | 3959 |
-| units | String | Unit of measurement corresponding to the **radius **| 'miles' |
+| radius | Integer | Radius of the spherical object, defaults to **Earth**. | 3959 |
+| units | String | Unit of measurement corresponding to the **radius** | 'miles' |
 | minimumLocations | Integer | Minimum number of nearby locations returned. | 3 |
 
 ### API ###
